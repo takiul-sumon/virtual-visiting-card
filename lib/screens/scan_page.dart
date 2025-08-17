@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:virtual_visiting_card/models/contact_model.dart';
+import 'package:virtual_visiting_card/screens/form_page.dart';
 import 'package:virtual_visiting_card/utils/constant.dart';
 
 class ScanPage extends StatefulWidget {
@@ -24,7 +26,9 @@ class _ScanPageState extends State<ScanPage> {
       designtaion = '',
       email = '',
       address = '',
-      image = '';
+      image = '',
+      company = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +36,7 @@ class _ScanPageState extends State<ScanPage> {
         title: Text('Scan Page'),
         actions: [
           IconButton(
-            onPressed: image.isEmpty ? null : () {},
+            onPressed: image.isEmpty ? null : createContact,
             icon: Icon(Icons.arrow_forward),
           ),
         ],
@@ -81,11 +85,15 @@ class _ScanPageState extends State<ScanPage> {
                       onDrop: getPropertyValue,
                     ),
                     DropTargetItem(
+                      property: ContactProperties.company,
+                      onDrop: getPropertyValue,
+                    ),
+                    DropTargetItem(
                       property: ContactProperties.email,
                       onDrop: getPropertyValue,
                     ),
                     DropTargetItem(
-                      property: ContactProperties.address,
+                      property: ContactProperties.company,
                       onDrop: getPropertyValue,
                     ),
                   ],
@@ -123,7 +131,45 @@ class _ScanPageState extends State<ScanPage> {
     }
   }
 
-  getPropertyValue(String property, String value) {}
+  getPropertyValue(String property, String value) {
+    switch (property) {
+      case ContactProperties.name:
+        name = value;
+        break;
+      case ContactProperties.mobile:
+        mobile = value;
+        break;
+      case ContactProperties.address:
+        address = value;
+        break;
+      case ContactProperties.company:
+        company = value;
+        break;
+      case ContactProperties.designation:
+        designtaion = value;
+        break;
+      case ContactProperties.email:
+        email = value;
+        break;
+      case ContactProperties.website:
+        website = value;
+        break;
+    }
+  }
+
+  createContact() {
+    final contact = ContactModel(
+      name: name,
+      mobile: mobile,
+      website: website,
+      address: address,
+      company: company,
+      designation: designtaion,
+      image: image,
+      email: email,
+    );
+    Navigator.pushNamed(context, FormPage.name, arguments: contact);
+  }
 }
 
 class LineItem extends StatelessWidget {
