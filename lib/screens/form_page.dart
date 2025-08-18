@@ -11,7 +11,7 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
-  GlobalKey _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -29,13 +29,13 @@ class _FormPageState extends State<FormPage> {
 
   @override
   void dispose() {
-    super.dispose();
     nameController.dispose();
     emailController.dispose();
     mobileController.dispose();
     companyController.dispose();
     designationController.dispose();
     addressController.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,7 +47,17 @@ class _FormPageState extends State<FormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.contactModel.name)),
+      appBar: AppBar(
+        title: Text(widget.contactModel.name),
+        actions: [
+          IconButton(
+            onPressed: () {
+              saveContact();
+            },
+            icon: Icon(Icons.save),
+          ),
+        ],
+      ),
       body: Form(
         key: _formkey,
         child: Padding(
@@ -57,6 +67,12 @@ class _FormPageState extends State<FormPage> {
             children: [
               TextFormField(
                 controller: nameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter Proper Name';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(borderSide: BorderSide(width: 3)),
@@ -102,5 +118,16 @@ class _FormPageState extends State<FormPage> {
         ),
       ),
     );
+  }
+
+  void saveContact() async {
+    if (_formkey.currentState!.validate()) {
+      widget.contactModel.name = nameController.text;
+      widget.contactModel.company = companyController.text;
+      widget.contactModel.designation = designationController.text;
+      widget.contactModel.email = emailController.text;
+      widget.contactModel.mobile = mobileController.text;
+      widget.contactModel.address = addressController.text;
+    }
   }
 }
