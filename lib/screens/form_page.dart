@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_visiting_card/models/contact_model.dart';
+import 'package:virtual_visiting_card/provider/contact_provider.dart';
+import 'package:virtual_visiting_card/utils/helper_function.dart';
 
 class FormPage extends StatefulWidget {
   static final String name = 'form-page';
@@ -129,5 +132,15 @@ class _FormPageState extends State<FormPage> {
       widget.contactModel.mobile = mobileController.text;
       widget.contactModel.address = addressController.text;
     }
+    Provider.of<ContactProvider>(context, listen: false)
+        .insertContact(widget.contactModel)
+        .then((value) {
+          if (value > 0) {
+            showMessage(context, 'saved');
+          }
+        })
+        .catchError((error) {
+          showMessage(context, 'Failed to Save');
+        });
   }
 }

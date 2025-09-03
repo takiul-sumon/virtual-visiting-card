@@ -1,4 +1,4 @@
-const String tableContact = 'tbl-contact';
+const String tableContact = 'tbl_contact';
 const String tblContactColId = 'id';
 const String tblContactColCompany = 'company';
 const String tblContactColemail = 'email';
